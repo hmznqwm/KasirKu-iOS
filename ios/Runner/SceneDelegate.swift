@@ -1,6 +1,1 @@
-import Flutter
-import UIKit
-
-class SceneDelegate: FlutterSceneDelegate {
-
-}
+// Not used in standard Flutter iOS
