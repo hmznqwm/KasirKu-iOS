@@ -30,7 +30,16 @@ jobs:
         run: flutter pub get
 
       - name: Build iOS Application (Release Unsigned)
-        run: flutter build ios --release --no-codesign --verbose
+        run: |
+          set +e
+          flutter build ios --release --no-codesign 2>&1 | tee build.log
+          STATUS=${PIPESTATUS[0]}
+          if [ $STATUS -ne 0 ]; then
+            echo "==================== XCODE ERROR SUMMARY ===================="
+            grep -i -C 2 -E "error:|fatal error|BUILD FAILED|signing" build.log || cat build.log
+            echo "============================================================="
+            exit $STATUS
+          fi
 
       - name: Package IPA Payload
         run: |
